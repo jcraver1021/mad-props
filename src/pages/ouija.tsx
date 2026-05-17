@@ -46,6 +46,13 @@ function Ouija() {
     setTranscribedMessage((prev) => prev + char);
   }, []);
 
+  const handleReset = () => {
+    setMessage("");
+    setAnimatingMessage("");
+    setTranscribedMessage("");
+    setIsAnimating(false);
+  };
+
   const expectedScrollLength = useMemo(() => {
     if (!isAnimating && !transcribedMessage) return undefined;
     return animatingMessage
@@ -167,30 +174,58 @@ function Ouija() {
               </ToggleButtonGroup>
             </Box>
 
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleAnimate}
-              disabled={isAnimating || !message.trim()}
-              sx={{
-                background: "linear-gradient(135deg, #8b6f47 0%, #6b5435 100%)",
-                border: "2px solid #4a2818",
-                color: "#f5e6d3",
-                fontFamily: "'Cinzel', 'Georgia', serif",
-                letterSpacing: "0.1em",
-                py: 1.5,
-                "&:hover": {
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleAnimate}
+                disabled={isAnimating || !message.trim()}
+                sx={{
                   background:
-                    "linear-gradient(135deg, #9b7f57 0%, #7b6445 100%)",
-                },
-                "&:disabled": {
-                  background: "#4a3828",
-                  color: "#8b7355",
-                },
-              }}
-            >
-              {isAnimating ? "Channeling Spirits..." : "Summon the Spirits"}
-            </Button>
+                    "linear-gradient(135deg, #8b6f47 0%, #6b5435 100%)",
+                  border: "2px solid #4a2818",
+                  color: "#f5e6d3",
+                  fontFamily: "'Cinzel', 'Georgia', serif",
+                  letterSpacing: "0.1em",
+                  py: 1.5,
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, #9b7f57 0%, #7b6445 100%)",
+                  },
+                  "&:disabled": {
+                    background: "#4a3828",
+                    color: "#8b7355",
+                  },
+                }}
+              >
+                {isAnimating ? "Channeling Spirits..." : "Summon the Spirits"}
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={handleReset}
+                disabled={!message && !transcribedMessage && !isAnimating}
+                sx={{
+                  borderColor: "#8b6f47",
+                  borderWidth: "2px",
+                  color: "#d4a574",
+                  fontFamily: "'Cinzel', 'Georgia', serif",
+                  letterSpacing: "0.1em",
+                  py: 1.5,
+                  px: 3,
+                  "&:hover": {
+                    borderColor: "#d4a574",
+                    borderWidth: "2px",
+                    background: "rgba(212, 165, 116, 0.1)",
+                  },
+                  "&:disabled": {
+                    borderColor: "#4a3828",
+                    color: "#8b7355",
+                  },
+                }}
+              >
+                Reset
+              </Button>
+            </Box>
           </Box>
 
           <OuijaBoard
