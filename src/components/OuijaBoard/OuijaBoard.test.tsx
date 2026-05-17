@@ -390,7 +390,7 @@ describe("OuijaBoard", () => {
     expect(charA).toBeInTheDocument();
   });
 
-  it("calls onCharacterVisit when planchette visits first character", () => {
+  it("calls onCharacterVisit when planchette visits first character", async () => {
     const mockCallback = vi.fn();
     const mockCharacterVisit = vi.fn();
     render(
@@ -402,10 +402,13 @@ describe("OuijaBoard", () => {
       />,
     );
 
+    expect(mockCharacterVisit).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("A");
   });
 
-  it("calls onCharacterVisit with uppercase characters", () => {
+  it("calls onCharacterVisit with uppercase characters", async () => {
     const mockCallback = vi.fn();
     const mockCharacterVisit = vi.fn();
     render(
@@ -417,6 +420,7 @@ describe("OuijaBoard", () => {
       />,
     );
 
+    await vi.advanceTimersByTimeAsync(500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("H");
   });
 
@@ -432,10 +436,14 @@ describe("OuijaBoard", () => {
       />,
     );
 
+    await vi.advanceTimersByTimeAsync(500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(300);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
 
     await vi.advanceTimersByTimeAsync(800);
-
     expect(mockCharacterVisit).toHaveBeenCalledWith("B");
     expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
   });
@@ -466,13 +474,14 @@ describe("OuijaBoard", () => {
       />,
     );
 
+    await vi.advanceTimersByTimeAsync(500);
     expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
     expect(mockCharacterVisit).toHaveBeenCalledWith("A");
 
-    await vi.advanceTimersByTimeAsync(800);
+    await vi.advanceTimersByTimeAsync(800 + 500);
     expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
 
-    await vi.advanceTimersByTimeAsync(800);
+    await vi.advanceTimersByTimeAsync(800 + 500);
     expect(mockCharacterVisit).toHaveBeenCalledTimes(3);
   });
 
@@ -488,14 +497,15 @@ describe("OuijaBoard", () => {
       />,
     );
 
+    await vi.advanceTimersByTimeAsync(500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("A");
     expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
 
-    await vi.advanceTimersByTimeAsync(800);
+    await vi.advanceTimersByTimeAsync(800 + 500);
     expect(mockCharacterVisit).toHaveBeenCalledWith(" ");
     expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
 
-    await vi.advanceTimersByTimeAsync(800);
+    await vi.advanceTimersByTimeAsync(800 + 500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("B");
     expect(mockCharacterVisit).toHaveBeenCalledTimes(3);
   });
@@ -512,14 +522,37 @@ describe("OuijaBoard", () => {
       />,
     );
 
+    await vi.advanceTimersByTimeAsync(500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("A");
     expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
 
     await vi.advanceTimersByTimeAsync(800);
     expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
 
-    await vi.advanceTimersByTimeAsync(800);
+    await vi.advanceTimersByTimeAsync(800 + 500);
     expect(mockCharacterVisit).toHaveBeenCalledWith("B");
     expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+  });
+
+  it("delays onCharacterVisit by 500ms after planchette arrives", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(400);
+    expect(mockCharacterVisit).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(100);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
   });
 });

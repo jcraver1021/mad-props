@@ -41,7 +41,9 @@ export default function OuijaBoard({
         setPlanchettePosition(firstPosition);
       }
       if (onCharacterVisit) {
-        onCharacterVisit(firstChar);
+        setTimeout(() => {
+          onCharacterVisit(firstChar);
+        }, 500);
       }
     }
     setCurrentCharIndex(0);
@@ -56,7 +58,9 @@ export default function OuijaBoard({
             setPlanchettePosition(position);
           }
           if (onCharacterVisit) {
-            onCharacterVisit(char);
+            setTimeout(() => {
+              onCharacterVisit(char);
+            }, 500);
           }
         }
         setCurrentCharIndex(charIndex);
