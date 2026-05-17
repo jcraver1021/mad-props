@@ -37,21 +37,26 @@ export default function Planchette({ x, y }: PlanchetteProps) {
             border: "2px solid #4a2818",
             boxShadow:
               "0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.2)",
+            WebkitMaskImage:
+              "radial-gradient(circle 28px at 50% 50%, transparent 0%, transparent 100%, black 100%)",
+            maskImage:
+              "radial-gradient(circle 28px at 50% 50%, transparent 0%, transparent 100%, black 100%)",
           }}
         />
         <Box
           sx={{
             position: "absolute",
             left: "50%",
-            top: "45%",
+            top: "50%",
             transform: "translate(-50%, -50%)",
-            width: 24,
-            height: 24,
+            width: 56,
+            height: 56,
             borderRadius: "50%",
-            background: "rgba(0, 0, 0, 0.7)",
-            border: "2px solid #2c1810",
+            background:
+              "radial-gradient(circle, rgba(173, 216, 230, 0.3) 0%, rgba(135, 206, 250, 0.2) 50%, rgba(100, 149, 237, 0.15) 100%)",
+            border: "3px solid #2c1810",
             boxShadow:
-              "0 0 8px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.1)",
+              "0 0 12px rgba(135, 206, 250, 0.3), inset 0 2px 6px rgba(255, 255, 255, 0.4), inset 0 -2px 6px rgba(0, 0, 0, 0.2)",
           }}
         />
       </Box>

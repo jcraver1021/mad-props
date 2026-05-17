@@ -67,4 +67,32 @@ describe("Planchette", () => {
       top: "250px",
     });
   });
+
+  it("has viewing hole centered on the planchette", () => {
+    const { container } = render(<Planchette x={100} y={100} />);
+    const planchette = container.firstChild as HTMLElement;
+    const viewingHole = planchette.querySelector(
+      "div > div:nth-child(2)",
+    ) as HTMLElement;
+
+    expect(viewingHole).toBeInTheDocument();
+    expect(viewingHole).toHaveStyle({
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+    });
+  });
+
+  it("has viewing hole large enough to display letters", () => {
+    const { container } = render(<Planchette x={100} y={100} />);
+    const planchette = container.firstChild as HTMLElement;
+    const viewingHole = planchette.querySelector(
+      "div > div:nth-child(2)",
+    ) as HTMLElement;
+
+    expect(viewingHole).toHaveStyle({
+      width: "56px",
+      height: "56px",
+    });
+  });
 });

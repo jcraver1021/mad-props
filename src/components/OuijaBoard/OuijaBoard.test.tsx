@@ -286,4 +286,25 @@ describe("OuijaBoard", () => {
 
     expect(vi.getTimerCount()).toBeGreaterThan(0);
   });
+
+  it("character elements are queryable by ID for planchette positioning", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const charA = document.getElementById("char-A");
+    const charZ = document.getElementById("char-Z");
+    const char1 = document.getElementById("char-1");
+    const charYes = document.getElementById("char-YES");
+
+    expect(charA).toBeInTheDocument();
+    expect(charZ).toBeInTheDocument();
+    expect(char1).toBeInTheDocument();
+    expect(charYes).toBeInTheDocument();
+  });
 });
