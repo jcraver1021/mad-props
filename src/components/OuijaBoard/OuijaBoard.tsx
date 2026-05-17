@@ -6,6 +6,7 @@ export type OuijaBoardProps = {
   message: string;
   isAnimating: boolean;
   onAnimationComplete: () => void;
+  onCharacterVisit?: (char: string) => void;
   planchetteStyle?: PlanchetteStyle;
 };
 
@@ -15,10 +16,13 @@ const BOARD_LAYOUT = {
   numbers: "1234567890".split(""),
 };
 
+const VALID_CHARACTERS = new Set([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "]);
+
 export default function OuijaBoard({
   message,
   isAnimating,
   onAnimationComplete,
+  onCharacterVisit,
   planchetteStyle = "wooden",
 }: OuijaBoardProps) {
   const [currentCharIndex, setCurrentCharIndex] = useState(-1);
@@ -31,9 +35,14 @@ export default function OuijaBoard({
     }
 
     const firstChar = message[0].toUpperCase();
-    const firstPosition = getCharacterPosition(firstChar);
-    if (firstPosition) {
-      setPlanchettePosition(firstPosition);
+    if (VALID_CHARACTERS.has(firstChar)) {
+      const firstPosition = getCharacterPosition(firstChar);
+      if (firstPosition) {
+        setPlanchettePosition(firstPosition);
+      }
+      if (onCharacterVisit) {
+        onCharacterVisit(firstChar);
+      }
     }
     setCurrentCharIndex(0);
 
@@ -41,9 +50,14 @@ export default function OuijaBoard({
     const interval = setInterval(() => {
       if (charIndex < message.length) {
         const char = message[charIndex].toUpperCase();
-        const position = getCharacterPosition(char);
-        if (position) {
-          setPlanchettePosition(position);
+        if (VALID_CHARACTERS.has(char)) {
+          const position = getCharacterPosition(char);
+          if (position) {
+            setPlanchettePosition(position);
+          }
+          if (onCharacterVisit) {
+            onCharacterVisit(char);
+          }
         }
         setCurrentCharIndex(charIndex);
         charIndex++;
@@ -57,7 +71,7 @@ export default function OuijaBoard({
     }, 800);
 
     return () => clearInterval(interval);
-  }, [message, isAnimating, onAnimationComplete]);
+  }, [message, isAnimating, onAnimationComplete, onCharacterVisit]);
 
   const getCharacterPosition = (
     char: string,

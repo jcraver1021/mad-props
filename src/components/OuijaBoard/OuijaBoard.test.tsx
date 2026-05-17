@@ -389,4 +389,137 @@ describe("OuijaBoard", () => {
     const charA = document.getElementById("char-A");
     expect(charA).toBeInTheDocument();
   });
+
+  it("calls onCharacterVisit when planchette visits first character", () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+  });
+
+  it("calls onCharacterVisit with uppercase characters", () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="hello"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).toHaveBeenCalledWith("H");
+  });
+
+  it("calls onCharacterVisit for each character in sequence", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="AB"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+
+    await vi.advanceTimersByTimeAsync(800);
+
+    expect(mockCharacterVisit).toHaveBeenCalledWith("B");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not call onCharacterVisit when callback is not provided", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const charA = document.getElementById("char-A");
+    expect(charA).toBeInTheDocument();
+  });
+
+  it("calls onCharacterVisit correct number of times for repeated characters", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="AAA"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(3);
+  });
+
+  it("calls onCharacterVisit for all characters including spaces", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A B"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledWith(" ");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("B");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(3);
+  });
+
+  it("does not call onCharacterVisit for special characters like apostrophes and exclamation marks", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A!B"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("B");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+  });
 });

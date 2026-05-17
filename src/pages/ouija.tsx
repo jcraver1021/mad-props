@@ -9,14 +9,23 @@ import {
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import OuijaBoard from "../components/OuijaBoard/OuijaBoard";
+import MessageScroll from "../components/OuijaBoard/MessageScroll";
 import { ouijaTheme } from "../components/OuijaBoard/ouija-theme";
 import { PlanchetteStyle } from "../components/OuijaBoard/Planchette";
+
+const VALID_CHARACTERS = new Set([
+  ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
+  "YES",
+  "NO",
+  "GOODBYE",
+]);
 
 function Ouija() {
   const [message, setMessage] = useState("");
   const [animatingMessage, setAnimatingMessage] = useState("");
+  const [transcribedMessage, setTranscribedMessage] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
   const [planchetteStyle, setPlanchetteStyle] =
     useState<PlanchetteStyle>("wooden");
@@ -24,13 +33,26 @@ function Ouija() {
   const handleAnimate = () => {
     if (message.trim()) {
       setAnimatingMessage(message);
+      setTranscribedMessage("");
       setIsAnimating(true);
     }
   };
 
-  const handleAnimationComplete = () => {
+  const handleAnimationComplete = useCallback(() => {
     setIsAnimating(false);
-  };
+  }, []);
+
+  const handleCharacterVisit = useCallback((char: string) => {
+    setTranscribedMessage((prev) => prev + char);
+  }, []);
+
+  const expectedScrollLength = useMemo(() => {
+    if (!isAnimating && !transcribedMessage) return undefined;
+    return animatingMessage
+      .toUpperCase()
+      .split("")
+      .filter((char) => VALID_CHARACTERS.has(char)).length;
+  }, [isAnimating, transcribedMessage, animatingMessage]);
 
   return (
     <ThemeProvider theme={ouijaTheme}>
@@ -175,7 +197,13 @@ function Ouija() {
             message={animatingMessage}
             isAnimating={isAnimating}
             onAnimationComplete={handleAnimationComplete}
+            onCharacterVisit={handleCharacterVisit}
             planchetteStyle={planchetteStyle}
+          />
+
+          <MessageScroll
+            message={transcribedMessage}
+            expectedLength={expectedScrollLength}
           />
         </Box>
       </Container>
