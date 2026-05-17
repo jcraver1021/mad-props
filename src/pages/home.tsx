@@ -20,7 +20,19 @@ function Home() {
             py: 8,
           }}
         >
-          <Box sx={{ mb: 6, textAlign: "center" }}>
+          <Box
+            sx={{
+              mb: 6,
+              textAlign: "center",
+              background: "rgba(30, 41, 59, 0.5)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(59, 130, 246, 0.3)",
+              borderRadius: 3,
+              px: 6,
+              py: 4,
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+            }}
+          >
             <Typography
               variant="h2"
               component="h1"
@@ -32,7 +44,7 @@ function Home() {
             >
               Half-baked experiments
             </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+            <Typography variant="h6" color="text.secondary">
               A collection of prototypes and test applications
             </Typography>
           </Box>

@@ -14,9 +14,12 @@ export default function AppCard({ name, to, description }: AppCardProps) {
         height: 200,
         width: 280,
         transition: "all 0.3s ease-in-out",
+        border: "1px solid rgba(59, 130, 246, 0.2)",
         "&:hover": {
           transform: "translateY(-8px)",
-          boxShadow: 6,
+          boxShadow:
+            "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 0 15px rgba(59, 130, 246, 0.4)",
+          borderColor: "primary.main",
         },
       }}
     >
