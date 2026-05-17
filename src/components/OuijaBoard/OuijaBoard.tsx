@@ -1,11 +1,12 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import Planchette from "./Planchette";
+import Planchette, { PlanchetteStyle } from "./Planchette";
 
 export type OuijaBoardProps = {
   message: string;
   isAnimating: boolean;
   onAnimationComplete: () => void;
+  planchetteStyle?: PlanchetteStyle;
 };
 
 const BOARD_LAYOUT = {
@@ -18,6 +19,7 @@ export default function OuijaBoard({
   message,
   isAnimating,
   onAnimationComplete,
+  planchetteStyle = "wooden",
 }: OuijaBoardProps) {
   const [currentCharIndex, setCurrentCharIndex] = useState(-1);
   const [planchettePosition, setPlanchettePosition] = useState({ x: 0, y: 0 });
@@ -214,7 +216,11 @@ export default function OuijaBoard({
       </Box>
 
       {isAnimating && (
-        <Planchette x={planchettePosition.x} y={planchettePosition.y} />
+        <Planchette
+          x={planchettePosition.x}
+          y={planchettePosition.y}
+          style={planchetteStyle}
+        />
       )}
     </Box>
   );

@@ -1,14 +1,25 @@
-import { Box, Container, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  TextField,
+  Button,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { useState } from "react";
 import OuijaBoard from "../components/OuijaBoard/OuijaBoard";
 import { ouijaTheme } from "../components/OuijaBoard/ouija-theme";
+import { PlanchetteStyle } from "../components/OuijaBoard/Planchette";
 
 function Ouija() {
   const [message, setMessage] = useState("");
   const [animatingMessage, setAnimatingMessage] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [planchetteStyle, setPlanchetteStyle] =
+    useState<PlanchetteStyle>("wooden");
 
   const handleAnimate = () => {
     if (message.trim()) {
@@ -77,6 +88,54 @@ function Ouija() {
                 },
               }}
             />
+
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#d4a574",
+                  mb: 1,
+                  fontFamily: "'Cinzel', 'Georgia', serif",
+                  fontSize: "0.9rem",
+                }}
+              >
+                Planchette Style
+              </Typography>
+              <ToggleButtonGroup
+                value={planchetteStyle}
+                exclusive
+                onChange={(_, newStyle) => {
+                  if (newStyle !== null) {
+                    setPlanchetteStyle(newStyle);
+                  }
+                }}
+                fullWidth
+                disabled={isAnimating}
+                sx={{
+                  "& .MuiToggleButton-root": {
+                    color: "#d4a574",
+                    borderColor: "#8b6f47",
+                    fontFamily: "'Cinzel', 'Georgia', serif",
+                    "&.Mui-selected": {
+                      background:
+                        "linear-gradient(135deg, #8b6f47 0%, #6b5435 100%)",
+                      color: "#f5e6d3",
+                      "&:hover": {
+                        background:
+                          "linear-gradient(135deg, #9b7f57 0%, #7b6445 100%)",
+                      },
+                    },
+                    "&:hover": {
+                      background: "rgba(212, 165, 116, 0.1)",
+                    },
+                  },
+                }}
+              >
+                <ToggleButton value="wooden">Wooden</ToggleButton>
+                <ToggleButton value="spectral">Spectral</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+
             <Button
               fullWidth
               variant="contained"
@@ -107,6 +166,7 @@ function Ouija() {
             message={animatingMessage}
             isAnimating={isAnimating}
             onAnimationComplete={handleAnimationComplete}
+            planchetteStyle={planchetteStyle}
           />
         </Box>
       </Container>

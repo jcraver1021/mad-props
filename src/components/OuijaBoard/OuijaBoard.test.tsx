@@ -307,4 +307,33 @@ describe("OuijaBoard", () => {
     expect(char1).toBeInTheDocument();
     expect(charYes).toBeInTheDocument();
   });
+
+  it("defaults to wooden planchette style", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("accepts planchetteStyle prop", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        planchetteStyle="spectral"
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
 });

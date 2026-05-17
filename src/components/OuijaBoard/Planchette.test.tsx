@@ -95,4 +95,42 @@ describe("Planchette", () => {
       height: "56px",
     });
   });
+
+  it("renders planchette body and viewing hole", () => {
+    const { container } = render(<Planchette x={100} y={100} />);
+    const planchette = container.firstChild as HTMLElement;
+    const body = planchette.querySelector(
+      "div > div:nth-child(1)",
+    ) as HTMLElement;
+    const viewingHole = planchette.querySelector(
+      "div > div:nth-child(2)",
+    ) as HTMLElement;
+
+    expect(body).toBeInTheDocument();
+    expect(viewingHole).toBeInTheDocument();
+  });
+
+  it("accepts wooden style prop", () => {
+    const { container } = render(<Planchette x={100} y={100} style="wooden" />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toBeInTheDocument();
+    expect(planchette).toHaveStyle({
+      width: "100px",
+      height: "100px",
+    });
+  });
+
+  it("accepts spectral style prop", () => {
+    const { container } = render(
+      <Planchette x={100} y={100} style="spectral" />,
+    );
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toBeInTheDocument();
+    expect(planchette).toHaveStyle({
+      width: "100px",
+      height: "100px",
+    });
+  });
 });
