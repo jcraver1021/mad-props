@@ -177,7 +177,7 @@ describe("OuijaBoard", () => {
 
   it("handles lowercase letters by converting to uppercase", () => {
     const mockCallback = vi.fn();
-    const { container } = render(
+    render(
       <OuijaBoard
         message="hello"
         isAnimating={true}
@@ -193,7 +193,7 @@ describe("OuijaBoard", () => {
 
   it("handles mixed case letters", () => {
     const mockCallback = vi.fn();
-    const { container } = render(
+    render(
       <OuijaBoard
         message="HeLLo"
         isAnimating={true}
@@ -207,7 +207,7 @@ describe("OuijaBoard", () => {
 
   it("handles message with spaces", () => {
     const mockCallback = vi.fn();
-    const { container } = render(
+    render(
       <OuijaBoard
         message="HELLO WORLD"
         isAnimating={true}
@@ -221,7 +221,7 @@ describe("OuijaBoard", () => {
 
   it("handles message with special characters", () => {
     const mockCallback = vi.fn();
-    const { container } = render(
+    render(
       <OuijaBoard
         message="HELLO!@#$"
         isAnimating={true}
@@ -235,7 +235,7 @@ describe("OuijaBoard", () => {
 
   it("handles message with only numbers", () => {
     const mockCallback = vi.fn();
-    const { container } = render(
+    render(
       <OuijaBoard
         message="12345"
         isAnimating={true}
@@ -252,7 +252,7 @@ describe("OuijaBoard", () => {
 
   it("handles complex message with letters, numbers, spaces, and special chars", () => {
     const mockCallback = vi.fn();
-    const { container } = render(
+    render(
       <OuijaBoard
         message="abc 123 !@#"
         isAnimating={true}
@@ -266,7 +266,7 @@ describe("OuijaBoard", () => {
 
   it("lowercase and uppercase messages should behave identically", () => {
     const mockCallback = vi.fn();
-    const { container: container1 } = render(
+    render(
       <OuijaBoard
         message="HELLO"
         isAnimating={true}
@@ -274,7 +274,7 @@ describe("OuijaBoard", () => {
       />,
     );
 
-    const { container: container2 } = render(
+    render(
       <OuijaBoard
         message="hello"
         isAnimating={true}

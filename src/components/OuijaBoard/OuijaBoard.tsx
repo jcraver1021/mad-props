@@ -25,12 +25,10 @@ export default function OuijaBoard({
   onCharacterVisit,
   planchetteStyle = "wooden",
 }: OuijaBoardProps) {
-  const [currentCharIndex, setCurrentCharIndex] = useState(-1);
   const [planchettePosition, setPlanchettePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!isAnimating || !message) {
-      setCurrentCharIndex(-1);
       return;
     }
 
@@ -46,7 +44,6 @@ export default function OuijaBoard({
         }, 500);
       }
     }
-    setCurrentCharIndex(0);
 
     let charIndex = 1;
     const interval = setInterval(() => {
@@ -63,13 +60,11 @@ export default function OuijaBoard({
             }, 500);
           }
         }
-        setCurrentCharIndex(charIndex);
         charIndex++;
       } else {
         clearInterval(interval);
         setTimeout(() => {
           onAnimationComplete();
-          setCurrentCharIndex(-1);
         }, 500);
       }
     }, 800);
