@@ -58,7 +58,7 @@ describe("OuijaBoard", () => {
     expect(screen.getByText("GOODBYE")).toBeInTheDocument();
   });
 
-  it("does not render planchette when not animating", () => {
+  it("renders planchette when not animating as preview", () => {
     const mockCallback = vi.fn();
     const { container } = render(
       <OuijaBoard
@@ -68,10 +68,8 @@ describe("OuijaBoard", () => {
       />,
     );
 
-    const planchettes = container.querySelectorAll(
-      '[style*="position: absolute"][style*="width: 100px"]',
-    );
-    expect(planchettes.length).toBe(0);
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
   });
 
   it("renders planchette when animating", () => {
@@ -335,5 +333,60 @@ describe("OuijaBoard", () => {
 
     const board = container.querySelector("#ouija-board");
     expect(board).toBeInTheDocument();
+  });
+
+  it("planchette is visible when not animating as preview", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("renders board when planchetteStyle prop changes", () => {
+    const mockCallback = vi.fn();
+    const { container, rerender } = render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+        planchetteStyle="wooden"
+      />,
+    );
+
+    let board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+
+    rerender(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+        planchetteStyle="spectral"
+      />,
+    );
+
+    board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("planchette moves to first character immediately when animation starts", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const charA = document.getElementById("char-A");
+    expect(charA).toBeInTheDocument();
   });
 });

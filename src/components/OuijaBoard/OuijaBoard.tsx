@@ -30,7 +30,14 @@ export default function OuijaBoard({
       return;
     }
 
-    let charIndex = 0;
+    const firstChar = message[0].toUpperCase();
+    const firstPosition = getCharacterPosition(firstChar);
+    if (firstPosition) {
+      setPlanchettePosition(firstPosition);
+    }
+    setCurrentCharIndex(0);
+
+    let charIndex = 1;
     const interval = setInterval(() => {
       if (charIndex < message.length) {
         const char = message[charIndex].toUpperCase();
@@ -215,12 +222,14 @@ export default function OuijaBoard({
         GOODBYE
       </Box>
 
-      {isAnimating && (
+      {isAnimating ? (
         <Planchette
           x={planchettePosition.x}
           y={planchettePosition.y}
           style={planchetteStyle}
         />
+      ) : (
+        <Planchette x={850} y={300} style={planchetteStyle} />
       )}
     </Box>
   );

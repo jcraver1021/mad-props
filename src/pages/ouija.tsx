@@ -74,13 +74,22 @@ function Ouija() {
                   background: "rgba(212, 165, 116, 0.1)",
                   "& fieldset": {
                     borderColor: "#8b6f47",
+                    borderWidth: "2px",
                   },
                   "&:hover fieldset": {
                     borderColor: "#d4a574",
+                    borderWidth: "2px",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#d4a574",
+                    borderWidth: "2px",
                   },
                 },
                 "& .MuiInputLabel-root": {
                   color: "#d4a574",
+                  "&.Mui-focused": {
+                    color: "#d4a574",
+                  },
                 },
                 "& .MuiInputBase-input": {
                   color: "#d4a574",
