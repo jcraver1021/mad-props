@@ -1,17 +1,23 @@
-import { Card, CardActionArea, CardContent } from "@mui/material";
+import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export type AppCardProps = {
   name: string;
   to: string;
+  description?: string;
 };
 
-export default function AppCard({ name, to }: AppCardProps) {
+export default function AppCard({ name, to, description }: AppCardProps) {
   return (
     <Card
       sx={{
-        height: 150,
-        width: 150,
+        height: 200,
+        width: 280,
+        transition: "all 0.3s ease-in-out",
+        "&:hover": {
+          transform: "translateY(-8px)",
+          boxShadow: 6,
+        },
       }}
     >
       <CardActionArea
@@ -20,9 +26,31 @@ export default function AppCard({ name, to }: AppCardProps) {
         sx={{
           height: "100%",
           width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <CardContent>{name}</CardContent>
+        <CardContent
+          sx={{
+            textAlign: "center",
+            p: 3,
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="h2"
+            gutterBottom
+            sx={{ fontWeight: 600 }}
+          >
+            {name}
+          </Typography>
+          {description && (
+            <Typography variant="body2" color="text.secondary">
+              {description}
+            </Typography>
+          )}
+        </CardContent>
       </CardActionArea>
     </Card>
   );
