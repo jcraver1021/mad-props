@@ -73,11 +73,13 @@ export default function OuijaBoard({
       key={key}
       id={`char-${char}`}
       sx={{
-        fontSize: "1.5rem",
+        fontSize: "2rem",
         fontWeight: "bold",
-        color: "text.primary",
+        color: "#1a0f08",
         cursor: "default",
         userSelect: "none",
+        fontFamily: "'Cinzel Decorative', 'Georgia', serif",
+        textShadow: "1px 1px 2px rgba(139, 69, 19, 0.3)",
       }}
     >
       {char}
@@ -91,23 +93,67 @@ export default function OuijaBoard({
         position: "relative",
         width: 800,
         height: 600,
-        background: "rgba(30, 41, 59, 0.8)",
-        borderRadius: 4,
-        border: "2px solid",
-        borderColor: "primary.main",
+        background:
+          "linear-gradient(135deg, #d4a574 0%, #c89f6f 50%, #b8935f 100%)",
+        borderRadius: "50px",
+        border: "8px solid #4a2818",
         p: 4,
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+        boxShadow:
+          "0 8px 32px rgba(0, 0, 0, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.2), inset 0 -2px 8px rgba(0, 0, 0, 0.3)",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 16,
+          left: 16,
+          right: 16,
+          bottom: 16,
+          border: "3px double #2c1810",
+          borderRadius: "40px",
+          pointerEvents: "none",
+        },
       }}
     >
       <Box
         sx={{
           position: "absolute",
-          top: 40,
+          top: 30,
+          left: 50,
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          fontFamily: "'Cinzel Decorative', 'Georgia', serif",
+          color: "#1a0f08",
+          textShadow: "1px 1px 2px rgba(139, 69, 19, 0.3)",
+        }}
+        id="char-YES"
+      >
+        YES
+      </Box>
+
+      <Box
+        sx={{
+          position: "absolute",
+          top: 30,
+          right: 50,
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          fontFamily: "'Cinzel Decorative', 'Georgia', serif",
+          color: "#1a0f08",
+          textShadow: "1px 1px 2px rgba(139, 69, 19, 0.3)",
+        }}
+        id="char-NO"
+      >
+        NO
+      </Box>
+
+      <Box
+        sx={{
+          position: "absolute",
+          top: 90,
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
           gap: 3,
-          width: "90%",
+          width: "75%",
           justifyContent: "space-around",
         }}
       >
@@ -119,12 +165,12 @@ export default function OuijaBoard({
       <Box
         sx={{
           position: "absolute",
-          top: 120,
+          top: 170,
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
           gap: 3,
-          width: "90%",
+          width: "75%",
           justifyContent: "space-around",
         }}
       >
@@ -136,7 +182,7 @@ export default function OuijaBoard({
       <Box
         sx={{
           position: "absolute",
-          top: 200,
+          top: 250,
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
@@ -152,37 +198,15 @@ export default function OuijaBoard({
       <Box
         sx={{
           position: "absolute",
-          top: 80,
-          left: 40,
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-        }}
-        id="char-YES"
-      >
-        YES
-      </Box>
-
-      <Box
-        sx={{
-          position: "absolute",
-          top: 80,
-          right: 40,
-          fontSize: "1.2rem",
-          fontWeight: "bold",
-        }}
-        id="char-NO"
-      >
-        NO
-      </Box>
-
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: 40,
+          bottom: 60,
           left: "50%",
           transform: "translateX(-50%)",
-          fontSize: "1.2rem",
+          fontSize: "1.8rem",
           fontWeight: "bold",
+          fontFamily: "'Cinzel Decorative', 'Georgia', serif",
+          color: "#1a0f08",
+          textShadow: "1px 1px 2px rgba(139, 69, 19, 0.3)",
+          letterSpacing: "0.2em",
         }}
         id="char-GOODBYE"
       >

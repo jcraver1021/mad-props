@@ -69,7 +69,7 @@ describe("OuijaBoard", () => {
     );
 
     const planchettes = container.querySelectorAll(
-      '[style*="position: absolute"][style*="width: 80px"]',
+      '[style*="position: absolute"][style*="width: 100px"]',
     );
     expect(planchettes.length).toBe(0);
   });

@@ -28,8 +28,8 @@ describe("Planchette", () => {
     const planchette = container.firstChild as HTMLElement;
 
     expect(planchette).toHaveStyle({
-      width: "80px",
-      height: "80px",
+      width: "100px",
+      height: "100px",
     });
   });
 
