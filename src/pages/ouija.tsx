@@ -9,11 +9,12 @@ import {
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import OuijaBoard from "../components/OuijaBoard/OuijaBoard";
 import MessageScroll from "../components/OuijaBoard/MessageScroll";
 import { ouijaTheme } from "../components/OuijaBoard/ouija-theme";
 import { PlanchetteStyle } from "../components/OuijaBoard/Planchette";
+import { recordAnimationAsGif, downloadBlob } from "../utils/gifRecorder";
 
 const VALID_CHARACTERS = new Set([
   ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ",
@@ -29,12 +30,42 @@ function Ouija() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [planchetteStyle, setPlanchetteStyle] =
     useState<PlanchetteStyle>("wooden");
+  const [isRecording, setIsRecording] = useState(false);
+  const animationContainerRef = useRef<HTMLDivElement>(null);
 
   const handleAnimate = () => {
     if (message.trim()) {
       setAnimatingMessage(message);
       setTranscribedMessage("");
       setIsAnimating(true);
+    }
+  };
+
+  const handleDownloadGif = async () => {
+    if (!message.trim() || !animationContainerRef.current) return;
+
+    setAnimatingMessage(message);
+    setTranscribedMessage("");
+    setIsAnimating(true);
+    setIsRecording(true);
+
+    // Calculate animation duration: 800ms per character + 500ms delay + 500ms at end
+    const validChars = message
+      .toUpperCase()
+      .split("")
+      .filter((char) => VALID_CHARACTERS.has(char));
+    const duration = validChars.length * 800 + 500 + 500;
+
+    try {
+      const blob = await recordAnimationAsGif(
+        animationContainerRef.current,
+        duration,
+      );
+      downloadBlob(blob, "ouija-animation.gif");
+    } catch (error) {
+      console.error("Failed to create GIF:", error);
+    } finally {
+      setIsRecording(false);
     }
   };
 
@@ -174,36 +205,66 @@ function Ouija() {
               </ToggleButtonGroup>
             </Box>
 
-            <Box sx={{ display: "flex", gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleAnimate}
+                  disabled={isAnimating || !message.trim()}
+                  sx={{
+                    background:
+                      "linear-gradient(135deg, #8b6f47 0%, #6b5435 100%)",
+                    border: "2px solid #4a2818",
+                    color: "#f5e6d3",
+                    fontFamily: "'Cinzel', 'Georgia', serif",
+                    letterSpacing: "0.1em",
+                    py: 1.5,
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #9b7f57 0%, #7b6445 100%)",
+                    },
+                    "&:disabled": {
+                      background: "#4a3828",
+                      color: "#8b7355",
+                    },
+                  }}
+                >
+                  {isAnimating && !isRecording
+                    ? "Channeling Spirits..."
+                    : "Summon the Spirits"}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleReset}
+                  disabled={!message && !transcribedMessage && !isAnimating}
+                  sx={{
+                    borderColor: "#8b6f47",
+                    borderWidth: "2px",
+                    color: "#d4a574",
+                    fontFamily: "'Cinzel', 'Georgia', serif",
+                    letterSpacing: "0.1em",
+                    py: 1.5,
+                    px: 3,
+                    "&:hover": {
+                      borderColor: "#d4a574",
+                      borderWidth: "2px",
+                      background: "rgba(212, 165, 116, 0.1)",
+                    },
+                    "&:disabled": {
+                      borderColor: "#4a3828",
+                      color: "#8b7355",
+                    },
+                  }}
+                >
+                  Reset
+                </Button>
+              </Box>
               <Button
                 fullWidth
-                variant="contained"
-                onClick={handleAnimate}
-                disabled={isAnimating || !message.trim()}
-                sx={{
-                  background:
-                    "linear-gradient(135deg, #8b6f47 0%, #6b5435 100%)",
-                  border: "2px solid #4a2818",
-                  color: "#f5e6d3",
-                  fontFamily: "'Cinzel', 'Georgia', serif",
-                  letterSpacing: "0.1em",
-                  py: 1.5,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #9b7f57 0%, #7b6445 100%)",
-                  },
-                  "&:disabled": {
-                    background: "#4a3828",
-                    color: "#8b7355",
-                  },
-                }}
-              >
-                {isAnimating ? "Channeling Spirits..." : "Summon the Spirits"}
-              </Button>
-              <Button
                 variant="outlined"
-                onClick={handleReset}
-                disabled={!message && !transcribedMessage && !isAnimating}
+                onClick={handleDownloadGif}
+                disabled={isAnimating || !message.trim()}
                 sx={{
                   borderColor: "#8b6f47",
                   borderWidth: "2px",
@@ -211,7 +272,6 @@ function Ouija() {
                   fontFamily: "'Cinzel', 'Georgia', serif",
                   letterSpacing: "0.1em",
                   py: 1.5,
-                  px: 3,
                   "&:hover": {
                     borderColor: "#d4a574",
                     borderWidth: "2px",
@@ -223,23 +283,25 @@ function Ouija() {
                   },
                 }}
               >
-                Reset
+                {isRecording ? "Creating GIF..." : "Download as GIF"}
               </Button>
             </Box>
           </Box>
 
-          <OuijaBoard
-            message={animatingMessage}
-            isAnimating={isAnimating}
-            onAnimationComplete={handleAnimationComplete}
-            onCharacterVisit={handleCharacterVisit}
-            planchetteStyle={planchetteStyle}
-          />
+          <Box ref={animationContainerRef}>
+            <OuijaBoard
+              message={animatingMessage}
+              isAnimating={isAnimating}
+              onAnimationComplete={handleAnimationComplete}
+              onCharacterVisit={handleCharacterVisit}
+              planchetteStyle={planchetteStyle}
+            />
 
-          <MessageScroll
-            message={transcribedMessage}
-            expectedLength={expectedScrollLength}
-          />
+            <MessageScroll
+              message={transcribedMessage}
+              expectedLength={expectedScrollLength}
+            />
+          </Box>
         </Box>
       </Container>
     </ThemeProvider>

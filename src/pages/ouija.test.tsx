@@ -84,4 +84,37 @@ describe("Ouija Page", () => {
     fireEvent.click(resetButton);
     expect(input.value).toBe("");
   });
+
+  it("renders download GIF button", () => {
+    render(<Ouija />);
+    expect(screen.getByText("Download as GIF")).toBeInTheDocument();
+  });
+
+  it("download GIF button is disabled when no message", () => {
+    render(<Ouija />);
+    const downloadButton = screen.getByText("Download as GIF");
+    expect(downloadButton).toBeDisabled();
+  });
+
+  it("download GIF button is enabled when message is entered", () => {
+    render(<Ouija />);
+    const input = screen.getByLabelText("Enter your message");
+    const downloadButton = screen.getByText("Download as GIF");
+
+    fireEvent.change(input, { target: { value: "Hello" } });
+
+    expect(downloadButton).not.toBeDisabled();
+  });
+
+  it("download GIF button is disabled during animation", () => {
+    render(<Ouija />);
+    const input = screen.getByLabelText("Enter your message");
+    const animateButton = screen.getByText("Summon the Spirits");
+    const downloadButton = screen.getByText("Download as GIF");
+
+    fireEvent.change(input, { target: { value: "A" } });
+    fireEvent.click(animateButton);
+
+    expect(downloadButton).toBeDisabled();
+  });
 });
