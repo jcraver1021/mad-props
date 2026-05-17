@@ -63,6 +63,13 @@ function Home() {
                 description="A sample experiment page"
               />
             </Grid>
+            <Grid item>
+              <AppCard
+                name="Ouija Board"
+                to="/ouija"
+                description="Animate messages with a mystical planchette"
+              />
+            </Grid>
           </Grid>
         </Box>
       </Container>

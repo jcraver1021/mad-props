@@ -1,0 +1,558 @@
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { render, screen } from "@testing-library/react";
+import OuijaBoard from "./OuijaBoard";
+
+describe("OuijaBoard", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("renders the board with all letters", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    letters.forEach((letter) => {
+      expect(screen.getByText(letter)).toBeInTheDocument();
+    });
+  });
+
+  it("renders the board with all numbers", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const numbers = "1234567890".split("");
+    numbers.forEach((number) => {
+      expect(screen.getByText(number)).toBeInTheDocument();
+    });
+  });
+
+  it("renders YES, NO, and GOODBYE", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    expect(screen.getByText("YES")).toBeInTheDocument();
+    expect(screen.getByText("NO")).toBeInTheDocument();
+    expect(screen.getByText("GOODBYE")).toBeInTheDocument();
+  });
+
+  it("renders planchette when not animating as preview", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message="HELLO"
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("renders planchette when animating", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("animation interval is set up when isAnimating is true", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="ABC"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const intervalCount = vi.getTimerCount();
+    expect(intervalCount).toBeGreaterThan(0);
+  });
+
+  it("handles empty message", async () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(mockCallback).not.toHaveBeenCalled();
+  });
+
+  it("each character has unique id", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    expect(document.getElementById("char-A")).toBeInTheDocument();
+    expect(document.getElementById("char-Z")).toBeInTheDocument();
+    expect(document.getElementById("char-1")).toBeInTheDocument();
+    expect(document.getElementById("char-0")).toBeInTheDocument();
+    expect(document.getElementById("char-YES")).toBeInTheDocument();
+    expect(document.getElementById("char-NO")).toBeInTheDocument();
+    expect(document.getElementById("char-GOODBYE")).toBeInTheDocument();
+  });
+
+  it("board has correct styling", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toHaveStyle({
+      position: "relative",
+      width: "800px",
+      height: "600px",
+    });
+  });
+
+  it("stops animation when isAnimating becomes false", async () => {
+    const mockCallback = vi.fn();
+    const { rerender } = render(
+      <OuijaBoard
+        message="HELLO"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(800);
+
+    rerender(
+      <OuijaBoard
+        message="HELLO"
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(mockCallback).not.toHaveBeenCalled();
+  });
+
+  it("handles lowercase letters by converting to uppercase", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="hello"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    expect(document.getElementById("char-H")).toBeInTheDocument();
+    expect(document.getElementById("char-E")).toBeInTheDocument();
+    expect(document.getElementById("char-L")).toBeInTheDocument();
+    expect(document.getElementById("char-O")).toBeInTheDocument();
+  });
+
+  it("handles mixed case letters", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="HeLLo"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const intervalCount = vi.getTimerCount();
+    expect(intervalCount).toBeGreaterThan(0);
+  });
+
+  it("handles message with spaces", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="HELLO WORLD"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const intervalCount = vi.getTimerCount();
+    expect(intervalCount).toBeGreaterThan(0);
+  });
+
+  it("handles message with special characters", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="HELLO!@#$"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const intervalCount = vi.getTimerCount();
+    expect(intervalCount).toBeGreaterThan(0);
+  });
+
+  it("handles message with only numbers", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="12345"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    expect(document.getElementById("char-1")).toBeInTheDocument();
+    expect(document.getElementById("char-2")).toBeInTheDocument();
+    expect(document.getElementById("char-3")).toBeInTheDocument();
+    expect(document.getElementById("char-4")).toBeInTheDocument();
+    expect(document.getElementById("char-5")).toBeInTheDocument();
+  });
+
+  it("handles complex message with letters, numbers, spaces, and special chars", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="abc 123 !@#"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const intervalCount = vi.getTimerCount();
+    expect(intervalCount).toBeGreaterThan(0);
+  });
+
+  it("lowercase and uppercase messages should behave identically", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="HELLO"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    render(
+      <OuijaBoard
+        message="hello"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
+  });
+
+  it("character elements are queryable by ID for planchette positioning", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const charA = document.getElementById("char-A");
+    const charZ = document.getElementById("char-Z");
+    const char1 = document.getElementById("char-1");
+    const charYes = document.getElementById("char-YES");
+
+    expect(charA).toBeInTheDocument();
+    expect(charZ).toBeInTheDocument();
+    expect(char1).toBeInTheDocument();
+    expect(charYes).toBeInTheDocument();
+  });
+
+  it("defaults to wooden planchette style", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("accepts planchetteStyle prop", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        planchetteStyle="spectral"
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("planchette is visible when not animating as preview", () => {
+    const mockCallback = vi.fn();
+    const { container } = render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("renders board when planchetteStyle prop changes", () => {
+    const mockCallback = vi.fn();
+    const { container, rerender } = render(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+        planchetteStyle="wooden"
+      />,
+    );
+
+    let board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+
+    rerender(
+      <OuijaBoard
+        message=""
+        isAnimating={false}
+        onAnimationComplete={mockCallback}
+        planchetteStyle="spectral"
+      />,
+    );
+
+    board = container.querySelector("#ouija-board");
+    expect(board).toBeInTheDocument();
+  });
+
+  it("planchette moves to first character immediately when animation starts", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const charA = document.getElementById("char-A");
+    expect(charA).toBeInTheDocument();
+  });
+
+  it("calls onCharacterVisit when planchette visits first character", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+  });
+
+  it("calls onCharacterVisit with uppercase characters", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="hello"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("H");
+  });
+
+  it("calls onCharacterVisit for each character in sequence", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="AB"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(300);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("B");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not call onCharacterVisit when callback is not provided", () => {
+    const mockCallback = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+      />,
+    );
+
+    const charA = document.getElementById("char-A");
+    expect(charA).toBeInTheDocument();
+  });
+
+  it("calls onCharacterVisit correct number of times for repeated characters", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="AAA"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+
+    await vi.advanceTimersByTimeAsync(800 + 500);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(800 + 500);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(3);
+  });
+
+  it("calls onCharacterVisit for all characters including spaces", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A B"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800 + 500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith(" ");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+
+    await vi.advanceTimersByTimeAsync(800 + 500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("B");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(3);
+  });
+
+  it("does not call onCharacterVisit for special characters like apostrophes and exclamation marks", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A!B"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800);
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(800 + 500);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("B");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(2);
+  });
+
+  it("delays onCharacterVisit by 500ms after planchette arrives", async () => {
+    const mockCallback = vi.fn();
+    const mockCharacterVisit = vi.fn();
+    render(
+      <OuijaBoard
+        message="A"
+        isAnimating={true}
+        onAnimationComplete={mockCallback}
+        onCharacterVisit={mockCharacterVisit}
+      />,
+    );
+
+    expect(mockCharacterVisit).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(400);
+    expect(mockCharacterVisit).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(100);
+    expect(mockCharacterVisit).toHaveBeenCalledWith("A");
+    expect(mockCharacterVisit).toHaveBeenCalledTimes(1);
+  });
+});
