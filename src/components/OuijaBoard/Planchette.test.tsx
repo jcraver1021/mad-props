@@ -1,0 +1,70 @@
+import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import Planchette from "./Planchette";
+
+describe("Planchette", () => {
+  it("renders at specified position", () => {
+    const { container } = render(<Planchette x={100} y={200} />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toBeInTheDocument();
+    expect(planchette).toHaveStyle({
+      left: "100px",
+      top: "200px",
+    });
+  });
+
+  it("renders with transform to center itself", () => {
+    const { container } = render(<Planchette x={50} y={75} />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toHaveStyle({
+      transform: "translate(-50%, -50%)",
+    });
+  });
+
+  it("has correct dimensions", () => {
+    const { container } = render(<Planchette x={0} y={0} />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toHaveStyle({
+      width: "80px",
+      height: "80px",
+    });
+  });
+
+  it("is positioned absolutely", () => {
+    const { container } = render(<Planchette x={0} y={0} />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toHaveStyle({
+      position: "absolute",
+    });
+  });
+
+  it("has smooth transition", () => {
+    const { container } = render(<Planchette x={0} y={0} />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toHaveStyle({
+      transition: "all 0.6s ease-in-out",
+    });
+  });
+
+  it("updates position when props change", () => {
+    const { container, rerender } = render(<Planchette x={10} y={20} />);
+    const planchette = container.firstChild as HTMLElement;
+
+    expect(planchette).toHaveStyle({
+      left: "10px",
+      top: "20px",
+    });
+
+    rerender(<Planchette x={150} y={250} />);
+
+    expect(planchette).toHaveStyle({
+      left: "150px",
+      top: "250px",
+    });
+  });
+});
