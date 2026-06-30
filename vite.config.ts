@@ -8,5 +8,11 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
+    deps: {
+      optimizer: {
+        web: { enabled: false },
+        ssr: { enabled: false },
+      },
+    },
   },
 });

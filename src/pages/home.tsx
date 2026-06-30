@@ -58,16 +58,16 @@ function Home() {
           >
             <Grid item>
               <AppCard
-                name="Example"
-                to="/example"
-                description="A sample experiment page"
+                name="Ouija Board"
+                to="/ouija"
+                description="Animate messages with a mystical planchette"
               />
             </Grid>
             <Grid item>
               <AppCard
-                name="Ouija Board"
-                to="/ouija"
-                description="Animate messages with a mystical planchette"
+                name="Minute Math"
+                to="/minute-math"
+                description="Solve math problems against the clock"
               />
             </Grid>
           </Grid>
