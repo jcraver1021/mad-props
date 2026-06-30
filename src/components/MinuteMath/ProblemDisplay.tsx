@@ -55,13 +55,13 @@ function AnswerField({
     <TextField
       inputRef={inputRef}
       value={value}
-      aria-label="answer input"
       onChange={(e) => onChange(e.target.value.replace(/[^0-9-]/g, ""))}
       onKeyDown={onKeyDown}
       placeholder="?"
       type="tel"
       autoComplete="off"
       inputProps={{
+        "aria-label": "answer input",
         style: {
           textAlign: "center",
           fontSize,

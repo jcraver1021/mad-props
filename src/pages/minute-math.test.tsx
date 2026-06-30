@@ -130,11 +130,11 @@ describe("MinuteMath page – answering problems", () => {
   }
 
   it("answering correctly increments the correct count", async () => {
-    // Force a predictable problem: 10 + 10 = 20
-    vi.spyOn(Math, "random").mockReturnValue(0.9999);
+    // 0.4 → op index Math.floor(0.4*2)=0 → "+"; a=b=Math.floor(0.4*10)+1=5; answer=10
+    vi.spyOn(Math, "random").mockReturnValue(0.4);
     const input = startAndGetProblem();
 
-    fireEvent.change(input, { target: { value: "20" } });
+    fireEvent.change(input, { target: { value: "10" } });
     fireEvent.keyDown(input, { key: "Enter" });
 
     // Wait for flash to clear and next problem to load
@@ -237,12 +237,12 @@ describe("MinuteMath page – format toggle", () => {
     vi.restoreAllMocks();
   });
 
-  it("defaults to horizontal format", () => {
+  it("defaults to vertical format", () => {
     render(<MinuteMath />);
     fireEvent.click(screen.getByText("Start!"));
     expect(screen.getByLabelText("problem display")).toHaveAttribute(
       "data-format",
-      "horizontal",
+      "vertical",
     );
   });
 
