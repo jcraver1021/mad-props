@@ -50,6 +50,6 @@
     "esbuild": ">=0.25.0"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-arm64-gnu": "*"
+    "@rollup/rollup-linux-arm64-gnu": "4.59.0"
   }
 }

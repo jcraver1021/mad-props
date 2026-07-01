@@ -108,3 +108,103 @@ describe("Vector Inversion", () => {
     expect(given.add(given.invert())).toStrictEqual(want);
   });
 });
+
+describe("Vector Subtraction", () => {
+  test("sub gives difference", () => {
+    expect(new Vec2D(5, 3).sub(new Vec2D(2, 1))).toStrictEqual(new Vec2D(3, 2));
+  });
+  test("v - v = zero", () => {
+    const v = new Vec2D(7, -4);
+    expect(v.sub(v)).toStrictEqual(new Vec2D(0, 0));
+  });
+});
+
+describe("Vector Magnitude", () => {
+  test("3-4-5 triangle", () => {
+    expect(new Vec2D(3, 4).magnitude()).toBeCloseTo(5);
+  });
+  test("zero vector", () => {
+    expect(new Vec2D(0, 0).magnitude()).toBe(0);
+  });
+  test("magnitudeSq of (3,4) is 25", () => {
+    expect(new Vec2D(3, 4).magnitudeSq()).toBe(25);
+  });
+  test("magnitudeSq equals magnitude squared", () => {
+    const v = new Vec2D(7, -11);
+    expect(v.magnitudeSq()).toBeCloseTo(v.magnitude() ** 2);
+  });
+});
+
+describe("Vector Normalize", () => {
+  test("unit length after normalize", () => {
+    expect(new Vec2D(3, 4).normalize().magnitude()).toBeCloseTo(1);
+  });
+  test("direction preserved", () => {
+    const v = new Vec2D(6, 0).normalize();
+    expect(v.x).toBeCloseTo(1);
+    expect(v.y).toBeCloseTo(0);
+  });
+  test("zero vector normalizes to zero", () => {
+    expect(new Vec2D(0, 0).normalize()).toStrictEqual(new Vec2D(0, 0));
+  });
+});
+
+describe("Vector Dot Product", () => {
+  test("perpendicular vectors have dot = 0", () => {
+    expect(new Vec2D(1, 0).dot(new Vec2D(0, 1))).toBe(0);
+  });
+  test("parallel vectors", () => {
+    expect(new Vec2D(3, 0).dot(new Vec2D(5, 0))).toBe(15);
+  });
+  test("symmetric: a·b == b·a", () => {
+    const a = new Vec2D(2, 3);
+    const b = new Vec2D(-1, 4);
+    expect(a.dot(b)).toBe(b.dot(a));
+  });
+});
+
+describe("Vector distanceTo", () => {
+  test("3-4-5 distance", () => {
+    expect(new Vec2D(0, 0).distanceTo(new Vec2D(3, 4))).toBeCloseTo(5);
+  });
+  test("symmetric", () => {
+    const a = new Vec2D(1, 2);
+    const b = new Vec2D(4, 6);
+    expect(a.distanceTo(b)).toBeCloseTo(b.distanceTo(a));
+  });
+  test("distance to self is 0", () => {
+    const v = new Vec2D(7, -3);
+    expect(v.distanceTo(v)).toBe(0);
+  });
+});
+
+describe("Vector rotate (angle)", () => {
+  test("rotate 0 is identity", () => {
+    const v = new Vec2D(3, 4).rotate(0);
+    expect(v.x).toBeCloseTo(3);
+    expect(v.y).toBeCloseTo(4);
+  });
+  test("rotate π/2 maps (1,0) → (0,1)", () => {
+    const v = new Vec2D(1, 0).rotate(Math.PI / 2);
+    expect(v.x).toBeCloseTo(0);
+    expect(v.y).toBeCloseTo(1);
+  });
+  test("rotate π maps (1,0) → (-1,0)", () => {
+    const v = new Vec2D(1, 0).rotate(Math.PI);
+    expect(v.x).toBeCloseTo(-1);
+    expect(v.y).toBeCloseTo(0);
+  });
+  test("rotation preserves magnitude", () => {
+    const v = new Vec2D(3, 4);
+    expect(v.rotate(1.23).magnitude()).toBeCloseTo(v.magnitude());
+  });
+});
+
+describe("Vector clone", () => {
+  test("equal value but distinct object", () => {
+    const v = new Vec2D(2, 7);
+    const c = v.clone();
+    expect(c).toStrictEqual(v);
+    expect(c).not.toBe(v);
+  });
+});

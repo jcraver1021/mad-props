@@ -70,6 +70,13 @@ function Home() {
                 description="Solve math problems against the clock"
               />
             </Grid>
+            <Grid item>
+              <AppCard
+                name="Solar System"
+                to="/solar-system"
+                description="Model planets orbiting a star and watch them evolve"
+              />
+            </Grid>
           </Grid>
         </Box>
       </Container>
