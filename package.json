@@ -47,7 +47,8 @@
     "vite": "^6.4.2"
   },
   "overrides": {
-    "esbuild": ">=0.25.0"
+    "esbuild": ">=0.25.0",
+    "js-yaml": "^4.3.0"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-arm64-gnu": "4.59.0"
