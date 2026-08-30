@@ -77,6 +77,13 @@ function Home() {
                 description="Model planets orbiting a star and watch them evolve"
               />
             </Grid>
+            <Grid item>
+              <AppCard
+                name="Propeller"
+                to="/propeller"
+                description="Spin a propeller and control its speed with a slider"
+              />
+            </Grid>
           </Grid>
         </Box>
       </Container>
