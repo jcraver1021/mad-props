@@ -14,48 +14,15 @@ import ProblemDisplay from "../components/MinuteMath/ProblemDisplay";
 import ResultsPanel from "../components/MinuteMath/ResultsPanel";
 import TimerArc from "../components/TimerArc/TimerArc";
 import Scoreboard from "../components/Scoreboard/Scoreboard";
-import { rand } from "../utils/math";
+import { generateProblem } from "../utils/math";
 import {
   DEFAULT_SETTINGS,
   DURATION_SECONDS,
   type DisplayFormat,
   type GameSettings as GameSettingsType,
-  type Op,
   type Problem,
   type ProblemHistoryEntry,
 } from "../components/MinuteMath/types";
-
-export function generateProblem(settings: GameSettingsType): Problem {
-  const { ops, maxOperand, allowNegative } = settings;
-  const op = ops[Math.floor(Math.random() * ops.length)] as Op;
-
-  if (op === "+") {
-    const a = rand(maxOperand);
-    const b = rand(maxOperand);
-    return { a, b, op, answer: a + b };
-  }
-
-  if (op === "−") {
-    const a = rand(maxOperand);
-    if (allowNegative) {
-      const b = rand(maxOperand);
-      return { a, b, op, answer: a - b };
-    }
-    const b = rand(Math.min(a, maxOperand));
-    return { a, b, op, answer: a - b };
-  }
-
-  if (op === "×") {
-    const a = rand(maxOperand);
-    const b = rand(maxOperand);
-    return { a, b, op, answer: a * b };
-  }
-
-  // ÷: generate answer and divisor first so the quotient is always a whole number
-  const answer = rand(maxOperand);
-  const b = rand(maxOperand);
-  return { a: b * answer, b, op: "÷", answer };
-}
 
 type Phase = "setup" | "playing" | "results";
 

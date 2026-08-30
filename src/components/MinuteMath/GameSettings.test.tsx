@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import GameSettings, { estimateGrade } from "./GameSettings";
+import GameSettings from "./GameSettings";
+import { estimateGrade } from "../../utils/math";
 import type { GameSettings as GameSettingsType } from "./types";
 
 const base: GameSettingsType = {

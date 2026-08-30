@@ -27,21 +27,46 @@ export default function OuijaBoard({
 }: OuijaBoardProps) {
   const [planchettePosition, setPlanchettePosition] = useState({ x: 0, y: 0 });
 
+  const getCharacterPosition = (
+    char: string,
+  ): { x: number; y: number } | null => {
+    const element = document.getElementById(`char-${char}`);
+    if (!element) return null;
+
+    const rect = element.getBoundingClientRect();
+    const boardRect = document
+      .getElementById("ouija-board")
+      ?.getBoundingClientRect();
+    if (!boardRect) return null;
+
+    return {
+      x: rect.left - boardRect.left + rect.width / 2,
+      y: rect.top - boardRect.top + rect.height / 2,
+    };
+  };
+
   useEffect(() => {
     if (!isAnimating || !message) {
       return;
     }
 
+    const timeouts: number[] = [];
     const firstChar = message[0].toUpperCase();
     if (VALID_CHARACTERS.has(firstChar)) {
-      const firstPosition = getCharacterPosition(firstChar);
-      if (firstPosition) {
-        setPlanchettePosition(firstPosition);
-      }
+      timeouts.push(
+        window.setTimeout(() => {
+          const firstPosition = getCharacterPosition(firstChar);
+          if (firstPosition) {
+            setPlanchettePosition(firstPosition);
+          }
+        }, 0),
+      );
       if (onCharacterVisit) {
-        setTimeout(() => {
-          onCharacterVisit(firstChar);
-        }, 500);
+        timeouts.push(
+          window.setTimeout(() => {
+            onCharacterVisit(firstChar);
+          }, 500),
+        );
       }
     }
 
@@ -69,26 +94,11 @@ export default function OuijaBoard({
       }
     }, 800);
 
-    return () => clearInterval(interval);
-  }, [message, isAnimating, onAnimationComplete, onCharacterVisit]);
-
-  const getCharacterPosition = (
-    char: string,
-  ): { x: number; y: number } | null => {
-    const element = document.getElementById(`char-${char}`);
-    if (!element) return null;
-
-    const rect = element.getBoundingClientRect();
-    const boardRect = document
-      .getElementById("ouija-board")
-      ?.getBoundingClientRect();
-    if (!boardRect) return null;
-
-    return {
-      x: rect.left - boardRect.left + rect.width / 2,
-      y: rect.top - boardRect.top + rect.height / 2,
+    return () => {
+      clearInterval(interval);
+      timeouts.forEach((id) => window.clearTimeout(id));
     };
-  };
+  }, [message, isAnimating, onAnimationComplete, onCharacterVisit]);
 
   const renderCharacter = (char: string, key: string) => (
     <Box

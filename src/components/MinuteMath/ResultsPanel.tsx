@@ -53,7 +53,7 @@ export default function ResultsPanel({
         }}
       >
         <Typography variant="h5" sx={{ fontWeight: 700 }}>
-          Time's up!
+          Time&apos;s up!
         </Typography>
 
         <Scoreboard

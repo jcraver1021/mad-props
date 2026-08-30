@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import MinuteMath, { generateProblem } from "./minute-math";
+import MinuteMath from "./minute-math";
+import { generateProblem } from "../utils/math";
 import type { GameSettings, Op } from "../components/MinuteMath/types";
 
 describe("MinuteMath page – setup phase", () => {
