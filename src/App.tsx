@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/home";
 import MinuteMath from "./pages/minute-math";
 import Ouija from "./pages/ouija";
+import PropellerPage from "./pages/propeller";
 import SolarSystemPage from "./pages/solar-system";
 import { theme } from "./theme";
 
@@ -17,6 +18,7 @@ function App() {
           <Route path="/minute-math" element={<MinuteMath />} />
           <Route path="/ouija" element={<Ouija />} />
           <Route path="/solar-system" element={<SolarSystemPage />} />
+          <Route path="/propeller" element={<PropellerPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
