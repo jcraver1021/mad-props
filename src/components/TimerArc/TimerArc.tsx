@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
 
 export interface TimerArcProps {
-  /** Seconds remaining. */
   secondsLeft: number;
   /** Total duration in seconds — used to compute the arc fill percentage. */
   totalSeconds: number;

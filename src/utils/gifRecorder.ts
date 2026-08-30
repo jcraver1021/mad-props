@@ -8,7 +8,7 @@ export async function recordAnimationAsGif(
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const frames: ImageData[] = [];
-    const frameDelay = 100; // Capture every 100ms
+    const frameDelay = 100;
     const totalFrames = Math.ceil(duration / frameDelay);
     let currentFrame = 0;
 

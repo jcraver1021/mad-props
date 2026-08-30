@@ -52,7 +52,6 @@ function PresetCard({ system, onSelect }: PresetCardProps) {
         style={{ flexShrink: 0, borderRadius: 6, overflow: "hidden" }}
       >
         <rect width={80} height={80} fill="#050d1a" rx={6} />
-        {/* Orbits (sqrt-scaled) */}
         {planets.map((p, i) => {
           const r = Math.sqrt(p.semiMajorAxis) * scale;
           const rx = r * (1 + p.eccentricity * 0.5);

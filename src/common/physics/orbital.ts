@@ -11,9 +11,7 @@ export interface Star {
   mass: number;
   visualRadius: number;
   position: Vec2D;
-  /** Display name (e.g. "Sun", "TRAPPIST-1"). */
   name?: string;
-  /** Hex color used for glow/body gradient (e.g. "#FFD54F"). */
   color?: string;
 }
 
@@ -27,7 +25,6 @@ export interface SimPlanet {
   velocity: Vec2D;
   /** Cached acceleration — used by Velocity Verlet integrator. */
   acceleration: Vec2D;
-  /** Whether to render a Saturn-like ring. */
   hasRing?: boolean;
 }
 
@@ -42,13 +39,11 @@ export interface PlanetConfig {
   eccentricity: number;
   /** Angle (radians) from the positive-x axis at which the planet starts. */
   startAngle: number;
-  /** Whether to render a Saturn-like ring. */
   hasRing?: boolean;
 }
 
 // ── Gravity ──────────────────────────────────────────────────────────────────
 
-/** Gravitational acceleration exerted on `bodyPos` by a point mass. */
 export function gravAccel(
   bodyPos: Vec2D,
   attractorPos: Vec2D,
@@ -62,7 +57,6 @@ export function gravAccel(
   return delta.normalize().scale(mag);
 }
 
-/** Net acceleration on `planet` from the star and (optionally) other planets. */
 export function computeAcceleration(
   planet: SimPlanet,
   star: Star,
@@ -149,7 +143,6 @@ export function createPlanet(
   const cosA = Math.cos(startAngle);
   const sinA = Math.sin(startAngle);
 
-  // Position: periapsis in the startAngle direction
   const position = new Vec2D(rp * cosA, rp * sinA);
 
   // Velocity: perpendicular CCW in screen coords → (sinθ, -cosθ)
@@ -172,8 +165,6 @@ export function createPlanet(
     hasRing: config.hasRing,
   };
 }
-
-// ── Orbital mechanics helpers ─────────────────────────────────────────────────
 
 // ── Orbit prediction ──────────────────────────────────────────────────────────
 
@@ -240,7 +231,6 @@ export function orbitalPeriod(
   return 2 * Math.PI * Math.sqrt((a * a * a) / (G * starMass));
 }
 
-/** Default star. */
 export const DEFAULT_STAR: Star = {
   mass: STAR_MASS,
   visualRadius: 22,

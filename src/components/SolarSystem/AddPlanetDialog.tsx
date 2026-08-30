@@ -37,7 +37,6 @@ export function AddPlanetDialog({
 
   const previewRef = useRef<HTMLCanvasElement>(null);
 
-  // Re-draw the orbit preview whenever any parameter changes
   useEffect(() => {
     const canvas = previewRef.current;
     if (!canvas) return;

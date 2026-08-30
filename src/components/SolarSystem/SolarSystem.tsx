@@ -8,7 +8,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Vec2D } from "../../common/math/vec2d";
 import {
@@ -44,8 +44,6 @@ import {
 } from "./constants";
 import { ImportDialog } from "./ImportDialog";
 import { BgStar, FreeformDrag, PlanetMeta } from "./types";
-
-// ── Main component ────────────────────────────────────────────────────────────
 
 export default function SolarSystem() {
   // ── Refs: physics & animation (mutated directly — no re-render) ─────────────
@@ -90,6 +88,10 @@ export default function SolarSystem() {
   const [importOpen, setImportOpen] = useState(false);
   const [systemName, setSystemName] = useState("Solar System");
   const [starMass, setStarMass] = useState(DEFAULT_STAR.mass);
+  const [starDisplay, setStarDisplay] = useState({
+    name: DEFAULT_STAR.name,
+    color: DEFAULT_STAR.color,
+  });
 
   // Keep refs in sync with state
   useEffect(() => {
@@ -114,16 +116,14 @@ export default function SolarSystem() {
     freeformModeRef.current = freeformMode;
   }, [freeformMode]);
 
-  // Stable background stars
-  const bgStars = useMemo<BgStar[]>(
-    () =>
-      Array.from({ length: 280 }, () => ({
-        x: Math.random(),
-        y: Math.random(),
-        r: Math.random() * 1.3 + 0.3,
-        alpha: Math.random() * 0.55 + 0.15,
-      })),
-    [],
+  // Stable background stars (generated once via lazy initializer, never recomputed)
+  const [bgStars] = useState<BgStar[]>(() =>
+    Array.from({ length: 280 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: Math.random() * 1.3 + 0.3,
+      alpha: Math.random() * 0.55 + 0.15,
+    })),
   );
 
   // ── Planet management ───────────────────────────────────────────────────────
@@ -171,6 +171,7 @@ export default function SolarSystem() {
     starRef.current = result.star;
     setSystemName(result.systemName);
     setStarMass(result.star.mass);
+    setStarDisplay({ name: result.star.name, color: result.star.color });
     setPlanetMetas([]);
 
     result.configs.forEach((cfg) => {
@@ -315,7 +316,7 @@ export default function SolarSystem() {
   // ── Animation loop ──────────────────────────────────────────────────────────
 
   const animate = useCallback(
-    (ts: number) => {
+    function loop(ts: number) {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
@@ -384,7 +385,7 @@ export default function SolarSystem() {
         }
       }
 
-      rafRef.current = requestAnimationFrame(animate);
+      rafRef.current = requestAnimationFrame(loop);
     },
     [bgStars],
   );
@@ -612,13 +613,13 @@ export default function SolarSystem() {
                 width: 16,
                 height: 16,
                 borderRadius: "50%",
-                background: `radial-gradient(circle, #FFFDE7, ${starRef.current.color ?? "#FF8F00"})`,
+                background: `radial-gradient(circle, #FFFDE7, ${starDisplay.color ?? "#FF8F00"})`,
                 flexShrink: 0,
               }}
             />
             <Box sx={{ flex: 1 }}>
               <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
-                {starRef.current.name ?? "Star"} ☀
+                {starDisplay.name ?? "Star"} ☀
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 Star · fixed
