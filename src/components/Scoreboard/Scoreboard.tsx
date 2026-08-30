@@ -4,7 +4,6 @@ import type { SxProps, Theme } from "@mui/material/styles";
 export interface ScoreItem {
   /** Short label shown beneath the value. */
   label: string;
-  /** The value to display. */
   value: number | string;
   /** Optional colour for the value text. Defaults to the theme's primary text colour. */
   color?: string;

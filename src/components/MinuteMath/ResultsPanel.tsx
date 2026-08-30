@@ -18,10 +18,6 @@ function getMessage(correct: number): string {
   return "Math wizard! 🏆";
 }
 
-/**
- * End-of-game results summary with problem history and action buttons.
- * Uses the generic Scoreboard for the correct/attempted display.
- */
 export default function ResultsPanel({
   correct,
   attempted,

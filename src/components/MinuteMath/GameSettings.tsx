@@ -16,10 +16,6 @@ export interface GameSettingsProps {
   onChange: (settings: GameSettings) => void;
 }
 
-/**
- * Settings panel: pick operations, maximum operand, and whether negative
- * answers are allowed. Includes a real-time grade-level estimator.
- */
 export default function GameSettings({
   settings,
   onChange,

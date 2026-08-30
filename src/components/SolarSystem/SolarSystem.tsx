@@ -45,8 +45,6 @@ import {
 import { ImportDialog } from "./ImportDialog";
 import { BgStar, FreeformDrag, PlanetMeta } from "./types";
 
-// ── Main component ────────────────────────────────────────────────────────────
-
 export default function SolarSystem() {
   // ── Refs: physics & animation (mutated directly — no re-render) ─────────────
   const canvasRef = useRef<HTMLCanvasElement>(null);

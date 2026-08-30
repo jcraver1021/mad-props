@@ -10,7 +10,6 @@ export const TRAIL_SAMPLE_EVERY = 2;
  */
 export const VSCALE = 0.5;
 
-/** Colour palette for planets and freeform bodies. */
 export const PLANET_COLORS: string[] = [
   "#B0BEC5",
   "#42A5F5",
